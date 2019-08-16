@@ -11,7 +11,6 @@ import logging
 sys.path.append('../')
 from conf import settings
 from core import src
-from lib import logger
 
 user_path = '../db/db.json'
 access_log_path = '../log/access.log'
@@ -58,7 +57,7 @@ if __name__ == '__main__':
     account_list = get_user_info(user_path)
     status = None
     name = ''
-    logger.init(access_log_path,logging.INFO)
+    src.init_evn(access_log_path)
     while True:
         print('1 => 登陆，2 => 注册,q =>退出')
         action = input('请选择：')

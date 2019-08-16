@@ -13,6 +13,14 @@ from conf import settings
 from lib import common
 from lib import logger
 
+def init_evn(path):
+    """
+    初始化环境
+    :param path:
+    :return:
+    """
+    logger.init(path, logging.INFO)
+
 def login_fun(account_list):
     """
     账号登陆过程

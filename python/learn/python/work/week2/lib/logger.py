@@ -7,6 +7,7 @@
 
 import logging
 
+access_log_path = '../log/access.log'
 logger = None
 filter = None
 
@@ -36,20 +37,19 @@ def print_logging(level,msg):
         logger.log(level, msg)
 
 
-def init(path,level=logging.DEBUG):
+def init(level=logging.DEBUG):
     """
     初始化 logging 配置
-    :param level: 等级
     :param path: 日志输出的文件路径
     :return:
     """
     global logger,filter
-    logging.basicConfig(filename=path,level=level,
+    logging.basicConfig(filename=access_log_path,level=level,
                         format='%(asctime)s\t%(name)s\t%(levelname)s\t%(username)s\t%(message)s')
-    format = logging.Formatter('%(asctime)s\t%(name)s\t%(levelname)s\t%(username)s\t%(message)s')
-    logger = logging.getLogger('myLogger')
+    logger = logging.getLogger('credit card')
     filter = ContextFilter()
     logger.addFilter(filter)
+    format = logging.Formatter('%(asctime)s\t%(name)s\t%(levelname)s\t%(username)s\t%(message)s')
     # handle = logging.FileHandler(path,encoding='utf-8')
     # handle.setLevel(level)
     # handle.setFormatter(format)

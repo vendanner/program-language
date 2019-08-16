@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+
 """
 核心逻辑:
     用户登陆、注册
@@ -7,24 +8,31 @@
 """
 import sys
 import logging
-
 sys.path.append('../')
 from conf import settings
-from lib import common
-from lib import logger
+from lib import common,logger
+from core import account
 
-def init_evn(path):
+def init_evn():
     """
     初始化环境
-    :param path:
     :return:
     """
-    logger.init(path, logging.INFO)
+    logger.init(logging.INFO)
+    account.load_user_info()
 
-def login_fun(account_list):
+def exit():
+    """
+    用户退出，做清理工作
+    :return:
+    """
+    account.save_user_info()
+    logger.print_logging(logging.INFO,'exit')
+    logger.set_username(None)
+
+def login_fun():
     """
     账号登陆过程
-    :param account_list: 所有用户的账号记录
     :return: 登录状态,用户名:
                 0 成功
                 -1 账户异常
@@ -32,9 +40,9 @@ def login_fun(account_list):
     """
     for i in range(3):
         name = input('请输入账号：')
-        if name in account_list:
+        if account.check_account_exists(name):
             logger.set_username(name)
-            if account_list[name][settings.STATUS_STR] == settings.NO_USE:
+            if account.get_account_status(name) == settings.NO_USE:
                 logger.print_logging(logging.INFO,'账号锁定，无法使用...')
                 print('账号锁定，无法使用...')
                 return -1,''
@@ -46,21 +54,21 @@ def login_fun(account_list):
 
     for i in range(3):
         passwd = input('请输入密码：')
-        if account_list[name][settings.PASSWD_STR] == passwd:
+        if account.get_account_passwd(name) == passwd:
+            print('登陆成功')
             logger.print_logging(logging.INFO, '登陆成功')
             return settings.SUCC_STR,name
         else:
             print('密码错误')
     else:
-        account_list[name][settings.STATUS_STR] = settings.NO_USE
+        account.set_account_status(name,settings.NO_USE)
         logger.print_logging(logging.INFO, '三次密码输入错误，账号锁定，无法使用...')
         print('三次密码输入错误，账号锁定，无法使用...')
         return -1,''
 
-def register_fun(account_list):
+def register_fun():
     """
     账号注册过程
-    :param account_list:账号信息
     :return: 登录状态:
                 0 成功
                 -1 账户异常
@@ -70,7 +78,9 @@ def register_fun(account_list):
     for i in range(3):
         name = input('请输入账号:')
         logger.set_username(name)
-        if name in account_list:
+        if name == settings.QUIT_STR:
+            return settings.QUIT_STR
+        elif account.check_account_exists(name):
             logger.print_logging(logging.INFO, '该账号已注册')
             print('该账号已注册')
         else:
@@ -94,8 +104,8 @@ def register_fun(account_list):
         if passwd_again == passwd:
             # 新增用户
             money = common.init_money()
-            account_list[name] = {settings.NAME_STR:name,settings.PASSWD_STR:passwd_again,settings.MONEY_STR:money,
-                                  settings.LIMIT_STR: money,settings.STATUS_STR: 0}
+            account.add_account(name=name,passwd=passwd_again,money=money,limit=money,status=0)
+
             print("注册成功")
             logger.print_logging(logging.INFO, '注册成功')
             return 0,name
@@ -104,19 +114,10 @@ def register_fun(account_list):
         logger.print_logging(logging.INFO, '注册失败')
         return 1,''
 
-def exit():
-    """
-    用户退出，做清理工作
-    :return:
-    """
-    logger.print_logging(logging.INFO,'exit')
-    logger.set_username(None)
-
-def get_money(name, account_list,buyed_item):
+def get_money(name,buyed_item):
     """
     提现：只能提取可用额度的一半
     :param name:
-    :param account_list:
     :param buyed_item:
     :return:str ;
             q:退出
@@ -124,27 +125,26 @@ def get_money(name, account_list,buyed_item):
     """
     logger.print_logging(logging.INFO, '正在提现...')
     while True:
-        print('您当前可取现金{} 元'.format( account_list[name][settings.MONEY_STR]/2))
+        print('您当前可取现金{} 元'.format(account.get_account_money(name)/2))
         value = input('请输入要取的现金：')
         try:
             if value == settings.QUIT_STR:
                 logger.print_logging(logging.INFO, '退出提现')
                 return settings.QUIT_STR
             value = float(value)
-            if value > 0 and value < account_list[name][settings.MONEY_STR]/2:
-                account_list[name][settings.MONEY_STR] -= value
-                print('提现成功，当前可用额度{}元'.format(account_list[name][settings.MONEY_STR]))
+            if value > 0 and value < account.get_account_money(name)/2:
+                account.set_account_money(name,account.get_account_money(name) - value)
+                print('提现成功，当前可用额度{}元'.format(account.get_account_money(name)))
                 logger.print_logging(logging.INFO, '成功提现 {}元'.format(value))
                 return str(value)
         except ValueError as e:
             pass
         print('请输入正确的金额...')
 
-def payment(name, account_list,buyed_item):
+def payment(name,buyed_item):
     """
     购物
     :param name:
-    :param account_list:
     :param buyed_item:dict {{item:[item,count]}，{}}
     :return:str ;
                 q:退出
@@ -170,10 +170,10 @@ def payment(name, account_list,buyed_item):
                 continue
 
             money = count * settings.ITEM_DICT[index][1]
-            if money > account_list[name][settings.MONEY_STR] :
+            if money > account.get_account_money(name) :
                 print('额度不足，请先提额或还款')
                 continue
-            account_list[name][settings.MONEY_STR] -= money
+            account.set_account_money(name, account.get_account_money(name) - money)
             if settings.ITEM_DICT[index][0] not in buyed_item:
                 buyed_item[settings.ITEM_DICT[index][0]] = dict(zip([settings.NAME_STR,settings.COUNT_STR],[settings.ITEM_DICT[index][0],count]))
             else:
@@ -186,11 +186,10 @@ def payment(name, account_list,buyed_item):
             pass
         print('输入错误，重新输入')
 
-def repayment(name, account_list,buyed_item):
+def repayment(name,buyed_item):
     """
     还款
     :param name:
-    :param account_list:
     :param buyed_item:
     :return:str ;
                 q:退出
@@ -198,8 +197,8 @@ def repayment(name, account_list,buyed_item):
     """
     logger.print_logging(logging.INFO, '正在还款...')
     while True:
-        print('您当前还需还款{} 元'.format(account_list[name][settings.LIMIT_STR] -
-                                   account_list[name][settings.MONEY_STR]))
+        print('您当前还需还款{} 元'.format(account.get_account_limit(name) -
+                                   account.get_account_money(name)))
         value = input('请输入要还款的金额：')
         try:
             if value == settings.QUIT_STR:
@@ -207,18 +206,18 @@ def repayment(name, account_list,buyed_item):
                 return settings.QUIT_STR
             value = float(value)
             if value > 0:
-                account_list[name][settings.MONEY_STR] += value
+                account.set_account_money(name, account.get_account_money(name) +value)
+                print( '成功还款{}元'.format(value))
                 logger.print_logging(logging.INFO, '还款{}元'.format(value))
                 return str(value)
         except ValueError as e:
             pass
         print('请输入正确的金额...')
 
-def increased(name, account_list,buyed_item):
+def increased(name,buyed_item):
     """
     提额
     :param name:
-    :param account_list:
     :param buyed_item:
     :return:str
                 q:退出
@@ -226,7 +225,7 @@ def increased(name, account_list,buyed_item):
     """
     logger.print_logging(logging.INFO, '正在提额...')
     while True:
-        print('您当前额度为{} 元'.format(account_list[name][settings.LIMIT_STR]))
+        print('您当前额度为{} 元'.format(account.get_account_limit(name)))
         print('最高额度为{} 元'.format(settings.MAX_LIMIT))
         money_limit = input('输入你要提升的额度：')
         try:
@@ -235,9 +234,10 @@ def increased(name, account_list,buyed_item):
                 return settings.QUIT_STR
             money_limit = float(money_limit)
             # 提额要小于最大值，且大于当前额度
-            if not (money_limit > settings.MAX_LIMIT or money_limit < account_list[name][settings.LIMIT_STR]):
-                account_list[name][settings.MONEY_STR] += money_limit -  account_list[name][settings.LIMIT_STR]
-                account_list[name][settings.LIMIT_STR] = money_limit
+            if not (money_limit > settings.MAX_LIMIT or money_limit < account.get_account_limit(name)):
+                account.set_account_money(name,account.get_account_money(name) + money_limit -
+                                          account.get_account_limit(name))
+                account.set_account_limit(name, money_limit)
                 print('提额成功，您当前总额度 {}元'.format(money_limit))
                 logger.print_logging(logging.INFO, '提额至 {}元'.format(money_limit))
                 return str(money_limit)
@@ -245,11 +245,10 @@ def increased(name, account_list,buyed_item):
             pass
         print('请输入正确的额度...')
 
-def goto_action(name, account_list,buyed_item):
+def goto_action(name,buyed_item):
     """
     登录成功后做提现，消费，还款，提额行为
     :param name:
-    :param account_list:
     :param buyed_item:
     :return:str:
             settings.QUIT_STR：退出
@@ -261,9 +260,9 @@ def goto_action(name, account_list,buyed_item):
         if action == settings.QUIT_STR:
             return settings.QUIT_STR
         # 具体操作
-        op_fun = action_dict.get(action,None)
-        if op_fun == None:
+        if action not in action_dict:
             continue
-        op_fun(name, account_list, buyed_item)
+
+        action_dict[action](name, buyed_item)
         # if op_fun(name, account_list,buyed_item) == settings.QUIT_STR:
         #     return settings.QUIT_STR

@@ -1,0 +1,43 @@
+
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0
+          http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <!-- TODO: a jarjar format would be better -->
+    <!-- 添加到生成文件名称的后缀符 -->
+    <id>dwt</id>
+    <!-- 打包类型 -->
+    <formats>
+        <format>jar</format>
+    </formats>
+    <!--  指定是否包含打包层目录 -->
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!-- 指定要包含的文件集 -->
+    <fileSets>
+        <fileSet>
+            <!-- 指定目录 -->
+            <directory>${project.build.directory}/classes</directory>
+            <!-- 指定文件集合的输出目录，该目录是相对于根目录 -->
+            <outputDirectory>/</outputDirectory>
+            <!-- 排除文件 -->
+            <!--
+            <excludes>
+                <exclude>*.xml</exclude>
+                <exclude>*.properties</exclude>
+            </excludes>
+            -->
+        </fileSet>
+    </fileSets>
+    <!-- 用来定制工程依赖 jar 包的打包方式 -->
+    <dependencySets>
+        <dependencySet>
+            <!-- 是否将第三方jar包解压到该依赖中 false 直接引入jar包 true解压引入 -->
+            <unpack>true</unpack>
+            <!--
+            <includes>
+                <include>com.alibaba:fastjson</include>
+            </includes>
+            -->
+        </dependencySet>
+    </dependencySets>
+</assembly>

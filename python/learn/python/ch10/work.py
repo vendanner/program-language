@@ -22,7 +22,6 @@ def fun_1():
                 content_arr.append(dict(zip(['name','sex','age','salary'],[name,sex,age,salary])))
             except ValueError as e:
                 print(e)
-                pass
     return content_arr
 
 def get_top(content_arr):

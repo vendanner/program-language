@@ -1,0 +1,29 @@
+2019-08-15 22:48:26,656	myLogger	INFO	123	登陆成功
+2019-08-15 22:48:27,994	myLogger	INFO	123	exit
+2019-08-15 22:49:03,062	myLogger	INFO	111	注册成功
+2019-08-15 22:49:06,326	myLogger	INFO	111	正在提现...
+2019-08-15 22:49:09,727	myLogger	INFO	111	成功提现 1000.0元
+2019-08-15 22:49:13,780	myLogger	INFO	111	exit
+2019-08-16 08:30:16,481	myLogger	INFO	1212	注册成功
+2019-08-16 08:30:18,362	myLogger	INFO	1212	exit
+2019-08-16 11:09:57,156	myLogger	INFO	li	账号锁定，无法使用...
+2019-08-16 11:10:01,163	myLogger	INFO	li	exit
+2019-08-16 11:13:42,668	credit card	INFO	li	账号锁定，无法使用...
+2019-08-16 11:13:45,430	credit card	INFO	li	exit
+2019-08-16 11:14:04,659	credit card	INFO	qa	注册成功
+2019-08-16 11:14:12,457	credit card	INFO	qa	exit
+2019-08-16 11:14:37,658	credit card	INFO	qa	该账号已注册
+2019-08-16 11:16:36,591	credit card	INFO	qa	登陆成功
+2019-08-16 11:18:22,515	credit card	INFO	qa	登陆成功
+2019-08-16 11:18:27,377	credit card	INFO	qa	正在提现...
+2019-08-16 11:18:34,007	credit card	INFO	qa	成功提现 10000.0元
+2019-08-16 11:18:40,471	credit card	INFO	qa	exit
+2019-08-16 11:19:02,199	credit card	INFO	qa	登陆成功
+2019-08-16 11:19:04,194	credit card	INFO	qa	正在购物...
+2019-08-16 11:19:09,030	credit card	INFO	qa	购买1件mac
+2019-08-16 11:19:13,790	credit card	INFO	qa	退出购物
+2019-08-16 11:19:16,298	credit card	INFO	qa	exit
+2019-08-16 11:19:43,282	credit card	INFO	qa	登陆成功
+2019-08-16 11:19:45,567	credit card	INFO	qa	正在还款...
+2019-08-16 11:19:49,260	credit card	INFO	qa	还款1000.0元
+2019-08-16 11:19:56,187	credit card	INFO	qa	exit

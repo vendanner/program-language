@@ -39,9 +39,8 @@ def copy_file(argv):
         src_path = argv[1]
         de_path = argv[2]
         if os.path.exists(src_path) :
-            with open(src_path, 'rb') as f:
-                with open(de_path,'wb') as fp:
-                    fp.write(f.read())
+            with open(src_path, 'rb') as f,open(de_path,'wb') as fp:
+                fp.write(f.read())
 
 def modify_file():
     """

@@ -66,7 +66,7 @@ def test_mutable_args():
     :return:
     """
     foo(1,2,3,4,5,6)
-    fun_mutable(1,2,3,a=4,c=5,b=6)
+    fun_mutable(1,2,3,a=4,c=5,b=6,d=6,e=7,f=9)
 
 def test_dis():
     """
@@ -80,5 +80,5 @@ def test_dis():
 if __name__ == "__main__":
     print("fun begin")
     # test_register()
-    # test_mutable_args()
+    test_mutable_args()
     test_dis()

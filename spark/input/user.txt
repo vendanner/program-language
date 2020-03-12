@@ -1,0 +1,5 @@
+1000001 bj douyin
+1000002 sh yy
+1000003 bj douyu
+1000004 sz qqmusic
+1000005 gz huya

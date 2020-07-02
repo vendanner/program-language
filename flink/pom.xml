@@ -18,7 +18,7 @@
     <hadoop.version>2.6.0-cdh5.15.1</hadoop.version>
     <spark.version>2.4.4</spark.version>
     <scalikejdbc.version>2.5.0</scalikejdbc.version>
-    <mysql.version>5.1.45</mysql.version>
+    <mysql.version>8.0.16</mysql.version>
     <hive.version>1.2.2</hive.version>
     <redis.version>2.8.2</redis.version>
     <json4s.version>3.2.10</json4s.version>

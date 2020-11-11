@@ -9,7 +9,7 @@
     <scala.version>2.11.8</scala.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>rm
+    <maven.compiler.target>1.8</maven.compiler.target>
     <hadoop.version>2.6.0</hadoop.version>
     <spark.version>2.4.4</spark.version>
     <scalikejdbc.version>2.5.0</scalikejdbc.version>
@@ -21,14 +21,19 @@
   </properties>
 
 
-    <!-- <repositories>
+     <repositories>
         <repository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
-    </repositories> -->
+    </repositories>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-hive_2.11</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -50,19 +55,7 @@
       <artifactId>spark-streaming_2.11</artifactId>
       <version>${spark.version}</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-hive_2.11</artifactId>
-      <version>${spark.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    -->
+
     <!--  hive json -->
     <!--
     <dependency>

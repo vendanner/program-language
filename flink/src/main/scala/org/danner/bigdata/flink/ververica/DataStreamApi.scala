@@ -59,7 +59,6 @@ object DataStreamApi {
         env.setParallelism(3)
 
         val ds = env.addSource(new DataSource())
-        env.fromElements()
         // 统计出每个类别的金额总计
         val keyedSum = ds.map(x =>Order(x._1,x._2)).keyBy(_.sku).sum("value")
 //        keyedSum.print()

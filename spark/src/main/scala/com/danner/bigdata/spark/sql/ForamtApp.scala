@@ -3,7 +3,7 @@ package com.danner.bigdata.spark.sql
 import com.danner.bigdata.utils.ScaLikeJDBCUtil
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, Dataset, SaveMode, SparkSession}
+import org.apache.spark.sql.{Row,DataFrame, Dataset, SaveMode, SparkSession,functions}
 import scalikejdbc.WrappedResultSet
 import org.apache.phoenix.spark._
 
@@ -23,7 +23,10 @@ object ForamtApp {
 
         import spark.implicits._
 
-        val df = spark.read.option("","").format("text").load("input/sql/people.txt")
+        val df = spark.read.option("","")
+          .format("text")
+          .load("input/sql/people.txt")
+
         //  textFile 是在 load file 之后，select("value").as[String](sparkSession.implicits.newStringEncoder)
         val value: Dataset[String] = spark.read.textFile("input/sql/people.txt")
         val ds = value.map(x => {
@@ -57,13 +60,13 @@ object ForamtApp {
     def json(spark: SparkSession):Unit = {
         import spark.implicits._
 
-
         val df: DataFrame = spark.read.format("json").load("input/sql/people.json")
         df.printSchema()
         df.show()
         val result = df.select("name").filter('age > 20)
         result.show()
         result.write.format("json").mode(SaveMode.Overwrite).save("out")
+
     }
 
     /**
@@ -83,9 +86,11 @@ object ForamtApp {
     }
 
     /**
+      * 配置 spark-hive_xxx 依赖
       * hive :
-      *     将 HDFS 下 core-site.xml.bak.ali.bak.bak 和 hive下 hive-site.xml.bak 复制到 res
-      *     配置 spark-hive_xxx 依赖
+      *     将 HDFS 下 core-site.xml.bak.ali.bak.bak 和
+      *     hive下 hive-site.xml.bak 复制到 res
+      *     hive下 hive-site.xml.bak 复制到 res
       * @param spark
       */
     def hive(spark: SparkSession):Unit = {
@@ -134,26 +139,30 @@ object ForamtApp {
         // Hive 操作要设置 enableHiveSupport
         val spark = SparkSession.builder().appName("ForamtApp").master("local[2]")
 //                .config("hive.metastore.uris", "thrift://192.168.22.147:9083")
-//                .enableHiveSupport()
+                .enableHiveSupport()
                 .getOrCreate()
 
-//        json(spark)
+        json(spark)
 //        json(spark)
 //        csv(spark)
 //        hive(spark)
 
 //        jdbc(spark)
 
-        val sql = "select * from word_int"
-        val function = (rs: WrappedResultSet) => {
-            val word = rs.string("word")
-            val traffic = rs.long("traffic")
-            (word,traffic.toString)
-        }
-        val map: Map[String, String] = ScaLikeJDBCUtil.query(sql,function).toMap
+//        val sql = "select * from word_int"
+//        val function = (rs: WrappedResultSet) => {
+//            val word = rs.string("word")
+//            val traffic = rs.long("traffic")
+//            (word,traffic.toString)
+//        }
+//        val map: Map[String, String] = ScaLikeJDBCUtil.query(sql,function).toMap
+//
+//        spark.sparkContext.parallelize(map.toList).foreach(println)
 
-        spark.sparkContext.parallelize(map.toList).foreach(println)
+
+
         spark.close()
 
     }
 }
+

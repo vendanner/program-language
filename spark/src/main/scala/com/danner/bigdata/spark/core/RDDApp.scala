@@ -20,7 +20,7 @@ object RDDApp {
 //            }
 //        }
         val rdd1 = sc.parallelize(List(("John",18),("li",30),("John",10)))
-        val rdd2 = sc.parallelize(List(("John",100),("Tom",200),("Tom",100)))
+      val rdd2: RDD[(String, Int)] = sc.parallelize(List(("John",100),("Tom",200),("Tom",100)))
 //        rdd1.join(rdd2).printInfo()
 //        rdd1.leftOuterJoin(rdd2).printInfo()
 //        rdd1.rightOuterJoin(rdd2).printInfo()
@@ -36,6 +36,7 @@ object RDDApp {
             partition.map(x => s"分区是$index,元素是$x")
         }).printInfo()
 
+      rdd1.partitionBy()
         sc.stop()
     }
 }

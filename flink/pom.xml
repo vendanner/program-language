@@ -22,15 +22,15 @@
     <hive.version>1.2.2</hive.version>
     <redis.version>2.8.2</redis.version>
     <json4s.version>3.2.10</json4s.version>
-    <flink.version>1.9.0</flink.version>
+    <flink.version>1.11.2</flink.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>cloudera</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-    </repository>
-  </repositories>
+  <!--<repositories>-->
+    <!--<repository>-->
+      <!--<id>cloudera</id>-->
+      <!--<url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>-->
+    <!--</repository>-->
+  <!--</repositories>-->
 
   <dependencies>
     <!-- Apache Flink dependencies -->
@@ -68,6 +68,23 @@
       <version>${flink.version}</version>
     </dependency>
 
+    <!-- table -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-table-common</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-table-api-scala-bridge_${scala.binary.version}</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-table-planner-blink_${scala.binary.version}</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.flink</groupId>
       <artifactId>flink-table-planner_${scala.binary.version}</artifactId>
@@ -80,30 +97,33 @@
       <version>2.6.5-7.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-examples-streaming_2.11</artifactId>
+      <version>${flink.version}</version>
+      <scope>test</scope>
+    </dependency>
 
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-examples-table_2.11</artifactId>
+      <version>${flink.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-          <groupId>org.apache.flink</groupId>
-          <artifactId>flink-examples-streaming_2.11</artifactId>
-          <version>${flink.version}</version>
-          <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-examples-batch_2.11</artifactId>
+      <version>${flink.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-          <groupId>org.apache.flink</groupId>
-          <artifactId>flink-examples-table_2.11</artifactId>
-          <version>${flink.version}</version>
-          <scope>test</scope>
-        </dependency>
-
-        <dependency>
-          <groupId>org.apache.flink</groupId>
-          <artifactId>flink-examples-batch_2.11</artifactId>
-          <version>${flink.version}</version>
-          <scope>test</scope>
-        </dependency>
-
-
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-table-planner-blink_2.11</artifactId>
+      <version>${flink.version}</version>
+      <!--<scope>provided</scope>-->
+    </dependency>
 
     <!-- scalikejdbc -->
     <dependency>
@@ -120,6 +140,31 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>${mysql.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-runtime-web_2.11</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-cep-scala_${scala.binary.version}</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-json</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-jdbc_${scala.binary.version}</artifactId>
+      <version>${flink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>18.0</version>
     </dependency>
 
     <!-- Add logging framework, to produce console output when running in the IDE. -->
@@ -189,7 +234,7 @@
         <configuration>
           <scalaVersion>${scala.version}</scalaVersion>
           <args>
-            <arg>-target:jvm-1.5</arg>
+            <arg>-target:jvm-1.8</arg>
           </args>
         </configuration>
       </plugin>

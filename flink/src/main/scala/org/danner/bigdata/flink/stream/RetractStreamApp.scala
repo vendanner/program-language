@@ -1,23 +1,24 @@
 package org.danner.bigdata.flink.stream
 
 import java.util.Properties
+
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
-import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.api.{EnvironmentSettings, TableConfig, TableEnvironment}
 import org.apache.flink.types.Row
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala
-import org.apache.flink.table.api.scala._
 import org.danner.bigdata.flink.bean.misc
+import org.apache.flink.table.api._
+import org.apache.flink.table.api.bridge.scala.StreamTableEnvironment
 
 
 /**
   * RetractStreamTableSink
   * https://mp.weixin.qq.com/s?__biz=MzU5MTc1NDUyOA==&mid=2247483877&idx=1&sn=c722beb68ae27e3d1ae757c68a6842cc&chksm=fe2b65aac95cecbc278412a50495fc101d7cfecdbe15d7f6a3e04a5dc184dba87a983789949b&token=1090913763&lang=zh_CN#rd
-  * */
+  **/
 object RetractStreamApp {
   def main(args: Array[String]): Unit = {
     val timeStamp = misc.getLongTime("2020-03-05 00:00:00")
@@ -41,17 +42,18 @@ object RetractStreamApp {
         (x,"",0)
       }
     })
+    ds.print()
     tabEnv.createTemporaryView("wcTable", ds,'word,'tt,'ct)
     val rsTable = tabEnv.sqlQuery(
       s"""
-         |select word,ti,sum(ct) from (
+         |select ti,sum(ct) from (
          |  select word,
          |  max(tt) as ti,
          |  max(ct) as ct
          |  from wcTable
          |  group by word
          |  ) t
-         |group by word,ti
+         |group by ti
        """.stripMargin)
 
     val result: scala.DataStream[(Boolean, Row)] = tabEnv.toRetractStream(rsTable)
@@ -71,3 +73,16 @@ object RetractStreamApp {
     env.execute()
   }
 }
+
+/**
+  *
+  * 20/06/11 09:56:01 ERROR GeneratorKafka$: b,a,2
+  * 20/06/11 09:56:02 ERROR GeneratorKafka$: c,b,1
+  * 20/06/11 09:56:03 ERROR GeneratorKafka$: a,a,2
+  * 20/06/11 09:56:04 ERROR GeneratorKafka$: c,a,1
+  * 20/06/11 09:56:05 ERROR GeneratorKafka$: a,c,0
+  * 20/06/11 09:56:06 ERROR GeneratorKafka$: c,b,0
+  * 20/06/11 09:56:07 ERROR GeneratorKafka$: b,c,0
+  * 20/06/11 09:56:08 ERROR GeneratorKafka$: c,c,0
+  *
+  * */

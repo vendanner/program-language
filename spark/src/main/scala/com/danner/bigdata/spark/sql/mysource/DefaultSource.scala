@@ -4,10 +4,7 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.sources.{BaseRelation, RelationProvider, SchemaRelationProvider}
 import org.apache.spark.sql.types.StructType
 
-/**
-  * 讲师：若泽(PK哥)
-  * 交流群：126181630
-  */
+
 class DefaultSource extends RelationProvider with SchemaRelationProvider{
   override def createRelation(
                       sqlContext: SQLContext,

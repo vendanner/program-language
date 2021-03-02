@@ -1,0 +1,3 @@
+剥离的Parser模块，用于查看Spark SQL语法解析SQL后生成的语法树
+当开发新的语法支持时，可以在这里先验证，避免编译 Spark SQL
+https://github.com/DonnyZone/ANTLR4-SqlBase

@@ -23,7 +23,7 @@ object CEPDemo {
 
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime)
+//    env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime)
     env.setParallelism(1)
 
     val source = env.socketTextStream("127.0.0.1", 1080)
@@ -36,7 +36,7 @@ object CEPDemo {
 
     val pattern: Pattern[Event, Event] = Pattern
       .begin[Event]("start").where(_.cost > 10)
-      .next("middle").where(_.cost > 30)
+//      .next("middle").where(_.cost > 30)
         .next("end").where(_.cost > 100).within(Time.seconds(10))
 
     val outputTag = new OutputTag[String]("timeout")

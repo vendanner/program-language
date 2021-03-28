@@ -36,7 +36,6 @@ object RDDApp {
             partition.map(x => s"分区是$index,元素是$x")
         }).printInfo()
 
-      rdd1.partitionBy()
         sc.stop()
     }
 }

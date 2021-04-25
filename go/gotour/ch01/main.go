@@ -1,3 +1,7 @@
-package ch01
+package main
 
+import "fmt"
 
+func main()  {
+	fmt.Println("hello GO")
+}

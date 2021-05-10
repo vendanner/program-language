@@ -18,11 +18,12 @@ class MySQLSink extends RichSinkFunction[(Long,String,Long)]{
     }
 
     /**
-      * 写数据
-      * @param value
-      * @param context
-      */
-    override def invoke(value: (Long, String, Long), context: SinkFunction.Context[_]): Unit = {
+     * 写数据
+     *
+     * @param value
+     * @param context
+     */
+    override def invoke(value: (Long, String, Long), context: SinkFunction.Context): Unit = {
 //        val sql = s"insert into $tableName (time,domain,traffic) " +
 //                s"values('${value._1}','${value._2}','${value._3}') " +
 //                s"ON DUPLICATE KEY UPDATE time='${value._1}',domain='${value._2}'," +

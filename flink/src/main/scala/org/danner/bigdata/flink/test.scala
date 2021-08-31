@@ -1,7 +1,6 @@
 package org.danner.bigdata.flink
 
-import java.util.Collections
-
+import java.util.{Calendar, Collections, Date}
 import com.google.common.collect.Lists
 
 import scala.collection.JavaConversions
@@ -28,7 +27,8 @@ object test {
     this.buffer.add(Seq("1","2","4"))
     this.buffer.add(Seq("1","2","5"))
     executeBatch(JavaConversions.asScalaBuffer(this.buffer))
-
+    val hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    println(hours)
 
   }
 

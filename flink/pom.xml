@@ -125,6 +125,14 @@
       <!--<scope>provided</scope>-->
     </dependency>
 
+    <!-- flink-python -->
+
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-python_2.11</artifactId>
+      <version>${flink.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- scalikejdbc -->
     <dependency>
       <groupId>org.scalikejdbc</groupId>

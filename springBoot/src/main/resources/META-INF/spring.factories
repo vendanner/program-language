@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.danner.springboot.app.ch09.MyAutoConfiguration

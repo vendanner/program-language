@@ -65,16 +65,27 @@ object LookupSql {
 //       """.stripMargin, ExplainDetail.JSON_EXECUTION_PLAN))
 
     // 维表 join
-    println(tEnv.explainSql(
+//    println(tEnv.explainSql(
+//      s"""
+//         |insert into sink_table
+//         |select a.name,
+//         |a.cnt * b.price
+//         |from table1 as a
+//         |inner join mysql_table FOR SYSTEM_TIME AS OF a.procTime as b
+//         |on a.name = b.name
+//         |and a.cnt > b.price
+//       """.stripMargin, ExplainDetail.JSON_EXECUTION_PLAN))
+
+    println(tEnv.executeSql(
       s"""
          |insert into sink_table
          |select a.name,
          |a.cnt * b.price
          |from table1 as a
-         |left join mysql_table FOR SYSTEM_TIME AS OF a.procTime as b
+         |inner join mysql_table FOR SYSTEM_TIME AS OF a.procTime as b
          |on a.name = b.name
          |and a.cnt > b.price
-       """.stripMargin, ExplainDetail.JSON_EXECUTION_PLAN))
+       """.stripMargin))
 
   }
 }

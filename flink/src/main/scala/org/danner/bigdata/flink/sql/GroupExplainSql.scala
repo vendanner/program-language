@@ -12,7 +12,11 @@ object GroupExplainSql {
       .inStreamingMode()
       .build()
     val tEnv = StreamTableEnvironment.create(env,settings)
+    val configuration = tEnv.getConfig.getConfiguration
 
+    configuration.setString("table.exec.mini-batch.enabled", "true")         // 启用
+    configuration.setString("table.exec.mini-batch.allow-latency", "5 s")    // 缓存超时时长
+    configuration.setString("table.exec.mini-batch.size", "5000")            // 缓存大小
     tEnv.executeSql(
       s"""
          |CREATE TABLE table1 (
@@ -49,16 +53,16 @@ object GroupExplainSql {
          |from table1
          |group by name
        """.stripMargin, ExplainDetail.JSON_EXECUTION_PLAN))
-    tEnv.executeSql(
-      s"""
-         |insert into sink_table
-         |select
-         |name,
-         |sum(cnt) as cnt,
-         |max(cnt)
-         |from table1
-         |group by name
-       """.stripMargin)
+//    tEnv.executeSql(
+//      s"""
+//         |insert into sink_table
+//         |select
+//         |name,
+//         |sum(cnt) as cnt,
+//         |max(cnt)
+//         |from table1
+//         |group by name
+//       """.stripMargin)
 
   }
 }
